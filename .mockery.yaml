@@ -1,0 +1,9 @@
+with-expecter: true
+mockname: "{{.InterfaceName}}"
+outpkg: mocks
+packages:
+  github.com/alexisvisco/koyebtests/internal/types:
+    interfaces:
+      JobService:
+  github.com/hashicorp/nomad/api:
+
