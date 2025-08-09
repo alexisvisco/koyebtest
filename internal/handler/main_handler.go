@@ -65,6 +65,6 @@ func Main(params MainParams) http.HandlerFunc {
 		}
 
 		logger.Warn("unknown host", "host", hostHeader)
-		http.Error(w, "Not Found", http.StatusNotFound)
+		http.Error(w, "not_found", http.StatusNotFound)
 	}
 }
