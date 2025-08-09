@@ -58,8 +58,8 @@ func (s *NomadJobService) CreateJob(targetURL string, isScript bool) (*types.Cre
 	s.logger.Info("Job created successfully", "job_id", jobID, "port", port)
 
 	s.rwMutex.Lock()
-	defer s.rwMutex.Unlock()
 	s.jobIdToPort[jobID] = port
+	s.rwMutex.Unlock()
 
 	return &types.CreateJobOutput{
 		URL: fmt.Sprintf("http://%s.%s", jobID, s.host),
@@ -172,8 +172,8 @@ func (s *NomadJobService) PurgeJob(jobID string) error {
 
 	// Clean up the internal port mapping
 	s.rwMutex.Lock()
-	defer s.rwMutex.Unlock()
 	delete(s.jobIdToPort, jobID)
+	s.rwMutex.Unlock()
 
 	s.logger.Info("jobs purged", "job_id", jobID)
 
@@ -182,11 +182,15 @@ func (s *NomadJobService) PurgeJob(jobID string) error {
 
 func (s *NomadJobService) Close() error {
 	s.rwMutex.RLock()
-	defer s.rwMutex.RUnlock()
+	jobIDs := make([]string, 0, len(s.jobIdToPort))
+	for j := range s.jobIdToPort {
+		jobIDs = append(jobIDs, j)
+	}
+	s.rwMutex.RUnlock()
 
 	var errs error
-	for jobID := range s.jobIdToPort {
-		if err := s.PurgeJob(jobID); err != nil {
+	for _, jid := range jobIDs {
+		if err := s.PurgeJob(jid); err != nil {
 			errs = errors.Join(errs, err)
 		}
 	}
