@@ -4,13 +4,19 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"regexp"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
+	"unicode"
 
 	"github.com/alexisvisco/koyebtests/internal/types"
 	"github.com/google/uuid"
 	"github.com/hashicorp/nomad/api"
+	"golang.org/x/text/runes"
+	"golang.org/x/text/transform"
+	"golang.org/x/text/unicode/norm"
 )
 
 type NomadJobService struct {
@@ -39,8 +45,8 @@ func (s *NomadJobService) GetJobPort(jobID string) (int, bool) {
 	return port, exists
 }
 
-func (s *NomadJobService) CreateJob(targetURL string, isScript bool) (*types.CreateJobOutput, error) {
-	jobID := fmt.Sprintf("%s", uuid.New().String())
+func (s *NomadJobService) CreateJob(name string, targetURL string, isScript bool) (*types.CreateJobOutput, error) {
+	jobID := fmt.Sprintf(slugify(name) + "%s", uuid.New().String())
 
 	job := s.createNomadJobSpec(jobID, targetURL, isScript)
 
@@ -200,4 +206,22 @@ func (s *NomadJobService) Close() error {
 
 func toPtr[T any](v T) *T {
 	return &v
+}
+
+// Slugify converts a string to a URL-friendly slug
+func slugify(s string) string {
+	s = strings.ToLower(s)
+
+	t := transform.Chain(norm.NFD, runes.Remove(runes.In(unicode.Mn)), norm.NFC)
+	s, _, _ = transform.String(t, s)
+
+	reg := regexp.MustCompile(`[^a-z0-9]+`)
+	s = reg.ReplaceAllString(s, "-")
+
+	s = strings.Trim(s, "-")
+
+	reg = regexp.MustCompile(`-+`)
+	s = reg.ReplaceAllString(s, "-")
+
+	return s
 }

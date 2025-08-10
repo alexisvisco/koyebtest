@@ -54,7 +54,7 @@ func main() {
 		JobService: jobService,
 	})
 
-	http.HandleFunc("POST /create-job", handler.CreateJob(jobService))
+	http.HandleFunc("PUT /services/:name", handler.CreateJob(jobService))
 
 	server := &http.Server{
 		Addr:    ":80",

@@ -26,10 +26,12 @@ Note: We can use kata to have a secure environment for running scripts, but for 
 
 ### Create Job
 
-#### With Script execution 
+The API endpoint requires a service name as a path parameter: `/services/{name}`
+
+#### With Script execution
 
 ```bash
-curl -X POST http://api.koyebtest.alexisvis.co/create-job \
+curl -X PUT http://api.koyebtest.alexisvis.co/services/my-service \
   -H "Content-Type: application/json" \
   -d '{
     "url": "https://pastebin.com/raw/UCVAQpD4",
@@ -50,7 +52,7 @@ Response:
 #### With Static content
 
 ```bash
-curl -X POST http://api.koyebtest.alexisvis.co/create-job \
+curl -X PUT http://api.koyebtest.alexisvis.co/services/my-static-site \
   -H "Content-Type: application/json" \
   -d '{
     "url": "https://pastebin.com/raw/UCVAQpD4",
@@ -95,7 +97,7 @@ nip.io is used for dynamic DNS resolution, allowing you to access the service vi
 
 ### Call the API
 ```bash
-curl -X POST http://api.127.0.0.1.nip.io/create-job \
+curl -X PUT http://api.127.0.0.1.nip.io/services/my-service \
   -H "Content-Type: application/json" \
   -d '{
     "url": "https://pastebin.com/raw/UCVAQpD4",

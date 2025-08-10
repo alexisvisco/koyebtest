@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 
 	"github.com/alexisvisco/koyebtests/internal/types"
 )
@@ -29,7 +30,13 @@ func CreateJob(service types.JobService) http.HandlerFunc {
 			return
 		}
 
-		job, err := service.CreateJob(req.URL, req.IsScript)
+		name := r.PathValue("name")
+		if strings.Trim(name, " ") == "" {
+			http.Error(w, "invalid_name", http.StatusBadRequest)
+			return
+		}
+
+		job, err := service.CreateJob(name, req.URL, req.IsScript)
 		if err != nil {
 			http.Error(w, "failed_create_job", http.StatusInternalServerError)
 			return
