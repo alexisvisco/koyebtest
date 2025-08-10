@@ -65,9 +65,9 @@ func (_c *JobService_Close_Call) RunAndReturn(run func() error) *JobService_Clos
 	return _c
 }
 
-// CreateJob provides a mock function with given fields: targetURL, isScript
-func (_m *JobService) CreateJob(targetURL string, isScript bool) (*types.CreateJobOutput, error) {
-	ret := _m.Called(targetURL, isScript)
+// CreateJob provides a mock function with given fields: name, targetURL, isScript
+func (_m *JobService) CreateJob(name string, targetURL string, isScript bool) (*types.CreateJobOutput, error) {
+	ret := _m.Called(name, targetURL, isScript)
 
 	if len(ret) == 0 {
 		panic("no return value specified for CreateJob")
@@ -75,19 +75,19 @@ func (_m *JobService) CreateJob(targetURL string, isScript bool) (*types.CreateJ
 
 	var r0 *types.CreateJobOutput
 	var r1 error
-	if rf, ok := ret.Get(0).(func(string, bool) (*types.CreateJobOutput, error)); ok {
-		return rf(targetURL, isScript)
+	if rf, ok := ret.Get(0).(func(string, string, bool) (*types.CreateJobOutput, error)); ok {
+		return rf(name, targetURL, isScript)
 	}
-	if rf, ok := ret.Get(0).(func(string, bool) *types.CreateJobOutput); ok {
-		r0 = rf(targetURL, isScript)
+	if rf, ok := ret.Get(0).(func(string, string, bool) *types.CreateJobOutput); ok {
+		r0 = rf(name, targetURL, isScript)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*types.CreateJobOutput)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(string, bool) error); ok {
-		r1 = rf(targetURL, isScript)
+	if rf, ok := ret.Get(1).(func(string, string, bool) error); ok {
+		r1 = rf(name, targetURL, isScript)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -101,15 +101,16 @@ type JobService_CreateJob_Call struct {
 }
 
 // CreateJob is a helper method to define mock.On call
+//   - name string
 //   - targetURL string
 //   - isScript bool
-func (_e *JobService_Expecter) CreateJob(targetURL interface{}, isScript interface{}) *JobService_CreateJob_Call {
-	return &JobService_CreateJob_Call{Call: _e.mock.On("CreateJob", targetURL, isScript)}
+func (_e *JobService_Expecter) CreateJob(name interface{}, targetURL interface{}, isScript interface{}) *JobService_CreateJob_Call {
+	return &JobService_CreateJob_Call{Call: _e.mock.On("CreateJob", name, targetURL, isScript)}
 }
 
-func (_c *JobService_CreateJob_Call) Run(run func(targetURL string, isScript bool)) *JobService_CreateJob_Call {
+func (_c *JobService_CreateJob_Call) Run(run func(name string, targetURL string, isScript bool)) *JobService_CreateJob_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(string), args[1].(bool))
+		run(args[0].(string), args[1].(string), args[2].(bool))
 	})
 	return _c
 }
@@ -119,7 +120,7 @@ func (_c *JobService_CreateJob_Call) Return(_a0 *types.CreateJobOutput, _a1 erro
 	return _c
 }
 
-func (_c *JobService_CreateJob_Call) RunAndReturn(run func(string, bool) (*types.CreateJobOutput, error)) *JobService_CreateJob_Call {
+func (_c *JobService_CreateJob_Call) RunAndReturn(run func(string, string, bool) (*types.CreateJobOutput, error)) *JobService_CreateJob_Call {
 	_c.Call.Return(run)
 	return _c
 }

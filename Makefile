@@ -1,7 +1,6 @@
-.PHONY: test
-
+.PHONY: test mocks
 test:
 	go test ./...
 
 mocks:
-    mockery --with-expecter --dir mocks --filename "{{.InterfaceNameSnake}}.go" --structname "{{.InterfaceName}}" --disable-version-string
+	mockery --with-expecter --dir mocks --filename "{{.InterfaceNameSnake}}.go" --structname "{{.InterfaceName}}" --disable-version-string

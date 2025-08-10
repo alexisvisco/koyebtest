@@ -16,12 +16,13 @@ func TestCreateJob(t *testing.T) {
 	expectedURL := "http://job.example.com"
 
 	jobService.EXPECT().
-		CreateJob("http://example.com", true).
+		CreateJob("test-service", "http://example.com", true).
 		Return(&types.CreateJobOutput{URL: expectedURL}, nil)
 
 	handler := CreateJob(jobService)
 
-	req := httptest.NewRequest(http.MethodPost, "/create-job", strings.NewReader(`{"url":"http://example.com","is_script":true}`))
+	req := httptest.NewRequest(http.MethodPut, "/services/test-service", strings.NewReader(`{"url":"http://example.com","is_script":true}`))
+	req.SetPathValue("name", "test-service")
 	w := httptest.NewRecorder()
 
 	handler(w, req)
